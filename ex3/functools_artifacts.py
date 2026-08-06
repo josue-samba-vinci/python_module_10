@@ -1,4 +1,4 @@
-from functools import reduce, partial, lru_cache
+from functools import reduce, partial, lru_cache, singledispatch
 import operator
 from collections.abc import Callable
 from typing import Any
@@ -31,8 +31,26 @@ def memoized_fibonacci(n: int) -> int:
         return n
     return memoized_fibonacci(n-2) + memoized_fibonacci(n-1) 
 
+
 def spell_dispatcher() -> Callable[[Any], str]:
-    ...
+    @singledispatch
+    def dispatch(spell) -> str:
+        return f"Unknown spell type"
+
+    @dispatch.register(int)
+    def _(damage) -> str:
+        return f"Damage spell: {damage} damage"
+
+    @dispatch.register(str)
+    def _(enchantment) -> str:
+        return f"Enchantment: {enchantment}"
+
+    @dispatch.register(list)
+    def _(multi_cast) -> str:
+        return f"Multi-cast: {len(multi_cast)} spells"
+
+    return dispatch
+
 
 if __name__ == "__main__":
     print(spell_reducer([1,2,3], "add"))
@@ -50,8 +68,15 @@ if __name__ == "__main__":
     print("Testing memoized fibonacci...")
     print(f"fib(0): {memoized_fibonacci(0)}")
     print(f"fib(1): {memoized_fibonacci(1)}")
+    print(f"fib(1): {memoized_fibonacci(1)}")
+    print(f"fib(1): {memoized_fibonacci(1)}")
     print(f"fib(50): {memoized_fibonacci(50)}")
     print(f"fib(610): {memoized_fibonacci(610)}")
     print(memoized_fibonacci.cache_info())
-    print(f"fib(611): {memoized_fibonacci(611)}")
-    print(memoized_fibonacci.cache_info())
+    print("Testing spell dispatcher...")
+    dispatcher = spell_dispatcher()
+    print(dispatcher(42))
+    print(dispatcher("fireball"))
+    print(dispatcher(["fireball", "icing", "meteor"]))
+    print(dispatcher(46.3))
+
