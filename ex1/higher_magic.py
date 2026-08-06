@@ -19,6 +19,18 @@ def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
         return base_spell(target, amplified_power)
     return amplified
 
+def conditional_caster(condition: Callable, spell: Callable) -> Callable:
+    def caster(target: str, power: int) -> str:
+        if condition(target, power):
+            casted = spell(target, power)
+        else:
+            casted = "Spell fizzled"
+        return casted
+    return caster
+
+def enough_power(target: str, power: int) -> bool:
+        return power >= 20
+
 if __name__ == "__main__":
     combo1 = spell_combiner(fireball, heal)
     print(combo1("creature1", 10))
@@ -28,3 +40,9 @@ if __name__ == "__main__":
     print(combo3("creature3", 20))
     amplified_fireball = power_amplifier(fireball, 2)
     print(amplified_fireball("creature4", 50))
+    casted_fireball = conditional_caster(enough_power, fireball)
+    print(casted_fireball("creature5", 30))
+    print(casted_fireball("creature6", 5))
+    casted_heal = conditional_caster(enough_power, heal)
+    print(casted_heal("creature5", 30))
+    print(casted_heal("creature6", 5))
