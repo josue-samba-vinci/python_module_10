@@ -17,11 +17,13 @@ def spell_accumulator(initial_power: int) -> Callable:
     return accumulated
 
 def enchantment_factory(enchantment_type: str) -> Callable:
-    ...
+    def enchantment_item(item: str) -> str:
+        return enchantment_type + " " + item
+    return enchantment_item
 
 def memory_vault() -> dict[str, Callable]:
     ...
-
+    
 
 if __name__ == "__main__":
     counter_a = mage_counter()
@@ -44,3 +46,9 @@ if __name__ == "__main__":
     print(accumulator2(20))
     print(accumulator2(20))
     print(accumulator2(20))
+    enchantment1 = enchantment_factory("Flaming")
+    print(enchantment1("Sword"))
+    print(enchantment1("Axe"))
+    enchantment1 = enchantment_factory("Steel")
+    print(enchantment1("Axe"))
+    
