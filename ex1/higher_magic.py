@@ -31,6 +31,15 @@ def conditional_caster(condition: Callable, spell: Callable) -> Callable:
 def enough_power(target: str, power: int) -> bool:
         return power >= 20
 
+def spell_sequence(spells: list[Callable]) -> Callable:
+    def sequenced(target: str, power: int) -> list[str]:
+        spell_list = []
+        for spell in spells:
+            spell_list.append(spell(target, power))
+        return spell_list
+    return sequenced
+
+
 if __name__ == "__main__":
     combo1 = spell_combiner(fireball, heal)
     print(combo1("creature1", 10))
@@ -46,3 +55,6 @@ if __name__ == "__main__":
     casted_heal = conditional_caster(enough_power, heal)
     print(casted_heal("creature5", 30))
     print(casted_heal("creature6", 5))
+    spell_list = [fireball, fireball, heal, combo1]
+    sequence = spell_sequence(spell_list)
+    print(sequence("creature1", 10))
