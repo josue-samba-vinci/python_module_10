@@ -36,17 +36,18 @@ def waterfall() -> str:
 def power_validator(min_power: int) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(power: int, *args: Any, **kwargs: Any) -> str:
+        def wrapper(*args: Any, **kwargs: Any) -> str:
+            power = kwargs.get('power') or args[-1]
             if power < min_power:
-                return "The spell doesn't have enough power"
-            return func(power, *args, **kwargs)
+                return "Insufficient power for this spell"
+            return func(*args, **kwargs)
         return wrapper
     return decorator
 
 
 @power_validator(50)
-def earthquake(power: int) -> str:
-    return "The spell has enough power ! The floor is falling appart !"
+def thunderstorm(power: int) -> str:
+    return f"The thunderstorm hit the tree with {power} power !"
 
 
 def retry_spell(max_attempts: int) -> Callable:
@@ -88,10 +89,14 @@ def valid_spell() -> str:
 class MageGuild:
     @staticmethod
     def validate_mage_name(name: str) -> bool:
-        ...
+        if (len(name) >= 3
+           and all(char.isalpha() or char.isspace() for char in name)):
+            return True
+        return False
 
+    @power_validator(10)
     def cast_spell(self, spell_name: str, power: int) -> str:
-        ...
+        return f"Successfully cast {spell_name} with {power} power"
 
 
 if __name__ == "__main__":
@@ -99,11 +104,17 @@ if __name__ == "__main__":
     print(fireball())
     print(waterfall())
     print("Testing power validator...")
-    print(earthquake(70))
-    print(earthquake(power=30))
+    print(thunderstorm(70))
+    print(thunderstorm(power=30))
     print("Testing unvalid spell...")
     print(unvalid_spell())
     print("Testing changing spell...")
     print(changing_spell())
     print("Testing valid spell...")
     print(valid_spell())
+    mage = MageGuild()
+    print("Testing MageGuild...")
+    print(mage.validate_mage_name("abron"))
+    print(mage.validate_mage_name("ab"))
+    print(mage.cast_spell("Lightning", power=15))
+    print(mage.cast_spell("Sorcerer", power=5))
