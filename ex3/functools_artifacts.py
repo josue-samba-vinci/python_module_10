@@ -34,11 +34,12 @@ def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
 def base_enchantment(power: int, element: str, target: str) -> str:
     return f"{element} element hits {target} with {power} power"
 
+
 @lru_cache
 def memoized_fibonacci(n: int) -> int:
     if n < 2:
         return n
-    return memoized_fibonacci(n-2) + memoized_fibonacci(n-1) 
+    return memoized_fibonacci(n-2) + memoized_fibonacci(n-1)
 
 
 def spell_dispatcher() -> Callable[[Any], str]:
