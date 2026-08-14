@@ -69,18 +69,6 @@ def unvalid_spell() -> str:
     raise SpellFailedError()
 
 
-attempts_count = 0
-
-
-@retry_spell(3)
-def changing_spell() -> str:
-    global attempts_count
-    attempts_count += 1
-    if attempts_count < 3:
-        raise SpellFailedError()
-    return "Waaaaaaagh spelled!"
-
-
 @retry_spell(3)
 def valid_spell() -> str:
     return "Waaaaaaagh spelled !"
@@ -108,8 +96,6 @@ if __name__ == "__main__":
     print(thunderstorm(power=30))
     print("Testing unvalid spell...")
     print(unvalid_spell())
-    print("Testing changing spell...")
-    print(changing_spell())
     print("Testing valid spell...")
     print(valid_spell())
     mage = MageGuild()

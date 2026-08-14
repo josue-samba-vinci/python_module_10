@@ -4,11 +4,13 @@ from typing import Any
 
 def mage_counter() -> Callable:
     count = 0
+
     def increment() -> int:
         nonlocal count
         count += 1
         return count
     return increment
+
 
 def spell_accumulator(initial_power: int) -> Callable:
     def accumulated(power_added: int) -> int:
@@ -17,19 +19,23 @@ def spell_accumulator(initial_power: int) -> Callable:
         return initial_power
     return accumulated
 
+
 def enchantment_factory(enchantment_type: str) -> Callable:
     def enchantment_item(item: str) -> str:
         return enchantment_type + " " + item
     return enchantment_item
 
+
 def memory_vault() -> dict[str, Callable]:
     memory = {}
+
     def store(key: str, value: Any) -> None:
         memory[key] = value
+
     def recall(key: str) -> Any:
-        return(memory.get(key, "Memory not found"))
+        return memory.get(key, "Memory not found")
     return {"store": store, "recall": recall}
-    
+
 
 if __name__ == "__main__":
     counter_a = mage_counter()
@@ -63,6 +69,3 @@ if __name__ == "__main__":
     print(vault1['recall']('bank_balance'))
     print(vault1['recall']('bank_creation'))
     print(vault1['recall']('blabla'))
-
-
-
